@@ -100,10 +100,11 @@ export class WindowManager {
         }),
         h('button.tl.yellow', {
           dataset: { simTarget: 'traffic:min' },
-          title: 'ซ่อนหน้าต่าง (ย่อไปที่ Dock)',
+          title: 'ย่อไปที่ Dock (กด Option ค้างแล้วคลิก = ย่อทุกหน้าต่างของแอปนี้)',
           onclick: (e: Event) => {
             e.stopPropagation();
-            this.sim.minimizeWindow(w.id);
+            if ((e as MouseEvent).altKey) this.sim.minimizeAppAll(w.app);
+            else this.sim.minimizeWindow(w.id);
           },
         }),
         h('button.tl.green', {

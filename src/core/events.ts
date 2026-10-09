@@ -8,6 +8,7 @@ export type SimEvent =
   | { type: 'app:open'; app: string }
   | { type: 'app:quit'; app: string }
   | { type: 'app:minimize'; app: string }
+  | { type: 'app:minimizeAll'; app: string }
   // หน้าต่าง
   | { type: 'window:close'; app: string }
   | { type: 'window:zoom'; app: string }

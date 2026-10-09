@@ -507,6 +507,9 @@
 .sim-overlaylayer {
   position: absolute;
   inset: 0;
+  /* ทุก overlay (Control Center, Spotlight, Launchpad, Mission Control, เมนู)
+     ต้องอยู่เหนือหน้าต่างแอป (z วิ่งสะสม) เหนือ Dock (400) และเมนูบาร์ (500) เสมอ */
+  z-index: 900;
   pointer-events: none;
 }
 

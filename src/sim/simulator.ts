@@ -154,10 +154,26 @@ export class Simulator {
 
     clear(this.overlayLayer);
     closeMenus(this);
-    if (s.overlays.spotlight) this.overlayLayer.appendChild(h('div.overlay-backdrop.spot', renderSpotlight(this)));
+    if (s.overlays.spotlight) {
+      const backdrop = h('div.overlay-backdrop.spot');
+      // คลิกนอกกล่อง Spotlight = ปิด (เหมือน macOS จริง)
+      backdrop.addEventListener('pointerdown', (e) => {
+        if (e.target === backdrop) this.closeOverlay('spotlight');
+      });
+      backdrop.appendChild(renderSpotlight(this));
+      this.overlayLayer.appendChild(backdrop);
+    }
     if (s.overlays.launchpad) this.overlayLayer.appendChild(h('div.overlay-backdrop.lp', renderLaunchpad(this)));
     if (s.overlays.missioncontrol) this.overlayLayer.appendChild(h('div.overlay-backdrop.mc', renderMissionControl(this)));
-    if (s.overlays.controlcenter) this.overlayLayer.appendChild(h('div.overlay-backdrop.cc', renderControlCenter(this)));
+    if (s.overlays.controlcenter) {
+      const backdrop = h('div.overlay-backdrop.cc');
+      // คลิกนอก panel Control Center = ปิด
+      backdrop.addEventListener('pointerdown', (e) => {
+        if (e.target === backdrop) this.closeOverlay('controlcenter');
+      });
+      backdrop.appendChild(renderControlCenter(this));
+      this.overlayLayer.appendChild(backdrop);
+    }
     if (s.overlays.appswitcher && this.switcherTarget) this.overlayLayer.appendChild(renderAppSwitcher(this, this.switcherTarget));
     this.applyAppearance();
   }
@@ -307,11 +323,32 @@ export class Simulator {
   minimizeWindow(id: string): void {
     const win = this.store.get().windows.find((w) => w.id === id);
     if (!win) return;
-    this.store.update((s) => ({
-      windows: s.windows.map((w) => (w.id === id ? { ...w, minimized: true } : w)),
-      focusedApp: s.focusedApp === win.app ? null : s.focusedApp,
-    }));
+    this.store.update((s) => {
+      // ถ้าแอปยังมีหน้าต่างอื่นเปิดอยู่ ให้โฟกัสค้างไว้ที่แอป (macOS จะดันหน้าต่างถัดไปขึ้นมา)
+      const stillVisible = s.windows.some((w) => w.app === win.app && w.id !== id && !w.minimized);
+      return {
+        windows: s.windows.map((w) => (w.id === id ? { ...w, minimized: true } : w)),
+        focusedApp: s.focusedApp === win.app ? (stillVisible ? win.app : null) : s.focusedApp,
+      };
+    });
     this.emit({ type: 'app:minimize', app: win.app });
+  }
+
+  /** ย่อทุกหน้าต่างของแอป — Option+คลิกปุ่มเหลือง, ⌘⌥M, ⌘H (ซ่อนแอป) หรือเมนูหน้าต่าง */
+  minimizeAppAll(appId: string): void {
+    const s = this.store.get();
+    const targets = s.windows.filter((w) => w.app === appId && !w.minimized);
+    if (targets.length === 0) return;
+    this.store.update((st) => ({
+      windows: st.windows.map((w) => (w.app === appId && !w.minimized ? { ...w, minimized: true } : w)),
+      focusedApp: null,
+    }));
+    this.emit({ type: 'app:minimizeAll', app: appId });
+  }
+
+  /** ⌘H — ซ่อนแอปทั้งตัว (ทุกหน้าต่างหายไปพร้อมกัน เรียกคืนด้วยคลิกไอคอนใน Dock) */
+  hideApp(appId: string): void {
+    this.minimizeAppAll(appId);
   }
 
   zoomWindow(id: string): void {
@@ -341,10 +378,17 @@ export class Simulator {
     }
     const wins = s.windows.filter((w) => w.app === appId && !w.minimized);
     if (wins.length === 0) {
-      // แอปรันอยู่แต่หน้าต่างถูกย่อ/ปิดหมด → เปิดใหม่หรือเรียกคืน
+      // แอปรันอยู่แต่หน้าต่างถูกย่อ/ซ่อนหมด → เรียกคืนทุกหน้าต่างพร้อมกัน
       const min = s.windows.filter((w) => w.app === appId);
-      if (min.length > 0) this.focusWindow(min[min.length - 1]!.id);
-      else this.openApp(appId);
+      if (min.length > 0) {
+        this.store.update((st) => ({
+          windows: st.windows.map((w) => (w.app === appId ? { ...w, minimized: false } : w)),
+          focusedApp: appId,
+        }));
+        this.emit({ type: 'window:focus', app: appId });
+      } else {
+        this.openApp(appId);
+      }
     } else {
       const top = wins.sort((a, b) => b.z - a.z)[0]!;
       if (s.focusedApp === appId) this.minimizeWindow(top.id);
@@ -537,8 +581,11 @@ export class Simulator {
         return true;
       }
       case 'cmd+m':
-      case 'cmd+h':
         this.minimizeFocused();
+        return true;
+      case 'cmd+h':
+        // ⌘H ของ macOS จริง = ซ่อนทั้งแอป ไม่ใช่แค่หน้าต่างเดียว
+        if (s.focusedApp) this.hideApp(s.focusedApp);
         return true;
       case 'cmd+q': {
         if (s.focusedApp) this.quitApp(s.focusedApp);

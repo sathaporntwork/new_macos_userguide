@@ -40,7 +40,7 @@ export function renderAchievements(container: HTMLElement): void {
 
   const badgesGrid = h(
     'section.ach-badges',
-    h('h2.section-title', { text: '🎖️ คอลเลกชันตรา' }),
+    h('h2.section-title', { text: '🎖️ ตรารางวัลทั้งหมด' }),
     h(
       'div.badge-grid',
       ...badgeList.map((b) =>
@@ -77,7 +77,7 @@ export function renderAchievements(container: HTMLElement): void {
   const certDone = MODULES.every((m) => moduleComplete(m));
   const cert = h(
     'section.ach-cert',
-    h('h2.section-title', { text: certDone ? '📜 ประกาศนียบัตร' : '📜 ประกาศนียบัตร (ล็อกอยู่)' }),
+    h('h2.section-title', { text: certDone ? '📜 ประกาศนียบัตร' : '📜 ประกาศนียบัตร (ยังเปิดรับไม่ได้)' }),
     certDone
       ? h(
           'div.cert',

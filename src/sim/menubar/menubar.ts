@@ -118,6 +118,7 @@ export class MenuBar {
       title: 'หน้าต่าง',
       items: [
         { label: 'ย่อหน้าต่าง', shortcut: '⌘M', onclick: () => sim.minimizeFocused() },
+        { label: 'ย่อหน้าต่างทั้งหมดของแอปนี้', shortcut: '⌥⌘M', onclick: () => sim.minimizeAppAll(app?.id ?? 'finder') },
         { label: 'ซูม', onclick: () => sim.zoomFocused() },
         { separator: true },
         { label: 'นำทั้งหมดมาไว้ข้างหน้า', onclick: () => sim.openApp(app?.id ?? 'finder') },
@@ -198,7 +199,7 @@ export class MenuBar {
       { separator: true },
       { label: 'การตั้งค่า…', shortcut: '⌘,', onclick: () => sim.openApp('settings') },
       { separator: true },
-      { label: 'ซ่อน' + name, shortcut: '⌘H', onclick: () => sim.minimizeFocused() },
+      { label: 'ซ่อน' + name + ' (ทั้งแอป)', shortcut: '⌘H', onclick: () => sim.hideApp(app?.id ?? 'finder') },
       { separator: true },
       { label: `เลิกทำงาน${name}`, shortcut: '⌘Q', onclick: () => sim.quitApp(app?.id ?? 'finder') },
     ];
