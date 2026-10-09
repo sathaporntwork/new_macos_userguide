@@ -1,0 +1,255 @@
+/** โมดูล 3: คีย์ลัดและ Spotlight */
+
+import type { Module } from './types';
+import { openFinder, openApps } from './helpers';
+import { HOME } from '../sim/state';
+
+export const module3: Module = {
+  id: 'm3',
+  number: 3,
+  title: 'คีย์ลัดและ Spotlight',
+  subtitle: 'จาก Ctrl สู่ ⌘ — พร้อม Spotlight ผู้ช่วยค้นหาที่ทำให้คุณแทบไม่ต้องแตะเมาส์',
+  icon: '⌨️',
+  color: 'linear-gradient(135deg,#ff9f0a,#ff375f)',
+  badge: { id: 'badge:m3', name: 'Spotlight Master', emoji: '🔍', desc: 'ใช้คีย์ลัดหลักและ Spotlight ได้ครบทุกรูปแบบ' },
+  lessons: [
+    {
+      id: 'm3l1',
+      title: '⌘ = Ctrl ของฝั่ง Windows',
+      goal: 'เข้าใจหลักแปลงคีย์ลัด และฝึก ⌘C คัดลอกไฟล์จริง',
+      minutes: 5,
+      xp: 60,
+      initial: openFinder([...HOME, 'Documents']),
+      steps: [
+        {
+          kind: 'info',
+          title: 'กฎเหล็ก: จำ Ctrl ไว้ = ⌘',
+          body: 'แปลงคีย์ลัดทุกตัวได้ด้วยกฎเดียว: เห็น Ctrl ใน Windows → ใช้ ⌘ (Command) ใน Mac ตำแหน่ง ⌘ อยู่ข้าง Spacebar (ปุ่ม Alt ของ Windows เกือบบริเวณเดิม) นี่คือ 90% ของการย้ายค่ายสำเร็จ',
+          winTip: '⌘C คัดลอก • ⌘V วาง • ⌘X ตัด • ⌘Z ย้อน • ⌘S บันทึก • ⌘P พิมพ์ • ⌘A เลือกทั้งหมด — เหมือน Ctrl เป๊ะทุกตัว',
+        },
+        {
+          kind: 'info',
+          title: 'วิธีฝึกคีย์ลัดในบทเรียนนี้',
+          body: 'กดคีย์บอร์ดจริงได้เลย! บน Windows ให้ใช้ Ctrl แทน ⌘ (เราจับแปลงให้อัตโนมัติ) — หรือถ้า combo ไหนชนกับปุ่มของ Windows (เช่น Ctrl+W ปิดแท็บ) ให้กด "ปุ่มคีย์" ในการ์ดด้านขวานี้แทนได้ ผลเหมือนกัน 100%',
+        },
+        {
+          kind: 'action',
+          instruction: 'คลิกเลือกไฟล์ "โน้ตประชุม 9 ต.ค..txt" ใน Finder',
+          target: 'finder-item:file',
+          expect: { type: 'finder:select', name: 'โน้ตประชุม 9 ต.ค..txt' },
+          hint: 'คลิกครั้งเดียวที่ไฟล์ .txt',
+        },
+        {
+          kind: 'shortcut',
+          instruction: 'คัดลอกไฟล์ที่เลือกด้วย ⌘C (กด Ctrl+C บนคีย์บอร์ด Windows ได้เลย)',
+          keys: 'cmd+c',
+          hint: 'กดปุ่ม Ctrl ค้างแล้วกด C — หรือกดปุ่ม ⌘C ในการ์ดนี้',
+          winTip: 'เหมือน Ctrl+C เป๊ะ — ไฟล์จะถูกเก็บในคลิปบอร์ดของ Mac',
+        },
+        {
+          kind: 'action',
+          instruction: 'วางสำเนาไฟล์ด้วย ⌘V — จะได้ไฟล์ "คัดลอกของ ..." ปรากฏขึ้น',
+          target: 'finder-content',
+          expect: { type: 'file:paste' },
+          hint: 'ให้โฟกัสหน้าต่าง Finder ก่อน (คลิกที่หน้าต่าง) แล้วกด Ctrl+V',
+        },
+        {
+          kind: 'quiz',
+          question: 'คีย์ลัด Undo (ย้อนทำ) บน Mac คืออะไร?',
+          options: ['Ctrl+Z', '⌘Z', '⌥Z', 'Esc ค้าง'],
+          answer: 1,
+          explain: '⌘Z — และ Redo คือ ⇧⌘Z (Windows ใช้ Ctrl+Y) อยาก Undo ลึก ๆ ได้เกือบไม่จำกัดขั้น',
+        },
+      ],
+    },
+    {
+      id: 'm3l2',
+      title: '⌘Tab สลับหน้าต่างแบบโปร',
+      goal: 'วิ่งระหว่างแอปด้วยคีย์ลัดเดียว ไม่ต้องแตะเมาส์',
+      minutes: 4,
+      xp: 55,
+      initial: openApps('safari', 'notes'),
+      steps: [
+        {
+          kind: 'info',
+          title: 'App Switcher คือ Alt+Tab ของ Mac',
+          body: 'ตอนนี้เปิด Safari กับโน้ตไว้แล้ว — กด ⌘Tab (หรือกดปุ่มในการ์ด) เพื่อสลับแอป จะเห็นแถบไอคอนโผล่กลางจอเหมือน Alt+Tab ของ Windows',
+          winTip: 'Alt+Tab สลับ "หน้าต่าง" ของ Windows • ⌘Tab สลับ "แอป" ของ Mac (หน้าต่างย่อยในแอปเดียวใช้ ⌘` แทน)',
+        },
+        {
+          kind: 'shortcut',
+          instruction: 'กด ⌘Tab เพื่อสลับไปยังแอปถัดไป',
+          keys: 'cmd+tab',
+          hint: 'กดปุ่ม ⌘Tab ในการ์ดนี้ (บน Windows จริง Ctrl+Tab โดนเบราว์เซอร์จับ ให้ใช้ปุ่มในการ์ดแทน)',
+        },
+        {
+          kind: 'shortcut',
+          instruction: 'กด ⌘Tab อีกครั้งเพื่อวนกลับแอปก่อนหน้า',
+          keys: 'cmd+tab',
+          hint: 'ปุ่มเดิม ⌘Tab',
+        },
+        {
+          kind: 'info',
+          title: 'เกร็ดขั้นโปร: ⌘Tab ค้างแล้วเลือก',
+          body: 'บนเครื่องจริง: กด ⌘Tab แล้ว "กด ⌘ ค้างไว้" จะเห็น switcher ค้างอยู่ ใช้ ← → เลือกแอปแล้วปล่อย — เหมือน Alt+Tab ค้างของ Windows เป๊ะ',
+        },
+        {
+          kind: 'quiz',
+          question: 'เปิดหลายหน้าต่างในแอปเดียว (เช่น Finder 3 หน้าต่าง) ต้องสลับหน้าต่างยังไง?',
+          options: ['⌘Tab', '⌘` (ปุ่มข้างเลข 1)', 'Alt+Tab', '⌘W'],
+          answer: 1,
+          explain: '⌘` (backtick) วนหน้าต่างในแอปเดียวกัน ส่วน ⌘Tab ข้ามระหว่างแอป — จำคู่นี้ให้ขาด คือหัวใจการทำงานหลายหน้าต่าง',
+        },
+      ],
+    },
+    {
+      id: 'm3l3',
+      title: 'Spotlight — ค้นหาอะไรก็ได้ใน 1 วินาที',
+      goal: 'เปิดแอปและไฟล์ด้วย ⌘Space โดยไม่แตะเมาส์เลย',
+      minutes: 5,
+      xp: 60,
+      steps: [
+        {
+          kind: 'info',
+          title: 'Spotlight = Start Menu Search + File Search ในเวทีเดียว',
+          body: 'กด ⌘Space แล้วหน้าจอค้นหาจะเด้งกลางจอ — พิมพ์อะไรก็ได้: ชื่อแอป, ไฟล์, คำนวณเลข, แปลภาษา สาย Windows คิดว่า "Win+S ผสม Everything" จิบเดียวติดใจ',
+          winTip: 'เทียบเท่า: Win+S ค้นหา + File Explorer search + เครื่องคิดเลข รวมกันในกล่องเดียว',
+        },
+        {
+          kind: 'shortcut',
+          instruction: 'กด ⌘Space เพื่อเปิด Spotlight',
+          keys: 'cmd+space',
+          hint: 'กด Ctrl+Space บนคีย์บอร์ด หรือกดปุ่ม ⌘Space ในการ์ด',
+        },
+        {
+          kind: 'action',
+          instruction: 'พิมพ์ "safari" ลงในช่องค้นหาของ Spotlight',
+          target: 'spotlight-input',
+          expect: { type: 'spotlight:search', query: 'safari' },
+          hint: 'พิมพ์ลงกล่องที่เด้งมากลางจอ ตัวพิมพ์เล็ก/ใหญ่ไม่สำคัญ',
+        },
+        {
+          kind: 'action',
+          instruction: 'กด Enter (หรือคลิกผลลัพธ์) เพื่อเปิด Safari ทันที',
+          target: 'spotlight-panel',
+          expect: { type: 'spotlight:openResult', kind: 'app', value: 'safari' },
+          hint: 'ผลลัพธ์แรกคือแอป Safari — กด Enter ได้เลย',
+        },
+        {
+          kind: 'info',
+          title: 'คุณเพิ่งเปิดแอปโดยไม่แตะเมาส์เลย',
+          body: 'นี่แหละพลังของ Spotlight — คนโปรบน Mac เปิดทุกอย่างด้วย ⌘Space พิมพ์ 2-3 ตัวอักษรแล้ว Enter ประหยัดเวลาวันละเป็นร้อยคลิก',
+        },
+        {
+          kind: 'quiz',
+          question: 'อยากเปิดไฟล์ที่จำชื่อไม่ได้ว่าอยู่โฟลเดอร์ไหน วิธีไหนเร็วสุดบน Mac?',
+          options: ['เปิด Finder แล้วค้นทีละโฟลเดอร์', '⌘Space แล้วพิมพ์ชื่อไฟล์', 'รีสตาร์ทเครื่อง', 'ใช้ Recycle Bin'],
+          answer: 1,
+          explain: 'Spotlight ค้นทั้งเครื่องในเสี้ยววินาที — จำคำในชื่อไฟล์แม้แต่บางส่วนก็เจอ แถมพรีวิวไฟล์ได้ก่อนเปิด',
+        },
+      ],
+    },
+    {
+      id: 'm3l4',
+      title: 'Spotlight ขั้นเทพ (ฟีเจอร์ Tahoe)',
+      goal: 'คำนวณเลข ดูคลิปบอร์ด และรันแอคชันด่วน จาก Spotlight เดียว',
+      minutes: 6,
+      xp: 70,
+      steps: [
+        {
+          kind: 'info',
+          title: 'Spotlight ใน Tahoe ฉลาดขึ้นกว่าเดิม',
+          body: 'macOS Tahoe อัปเกรด Spotlight ใหม่หมด: ส่งอีเมล/สร้างโน้ตได้โดยไม่ต้องเปิดแอป (Quick Actions), ดูประวัติคลิปบอร์ด และมีคีย์ลัดย่อ (Quick Keys) ให้ตั้งเองได้',
+        },
+        {
+          kind: 'shortcut',
+          instruction: 'เปิด Spotlight ด้วย ⌘Space',
+          keys: 'cmd+space',
+        },
+        {
+          kind: 'action',
+          instruction: 'พิมพ์สมการ "25*4+10" แล้วดูผลลัพธ์ — Spotlight เป็นเครื่องคิดเลขด้วย!',
+          target: 'spotlight-input',
+          expect: { type: 'spotlight:search', query: '25*4+10' },
+          hint: 'พิมพ์ตรง ๆ ว่า 25*4+10 (ไม่ต้องมีเว้นวรรค)',
+        },
+        {
+          kind: 'action',
+          instruction: 'ล้างช่องค้นหา แล้วคลิกแถว "คลิปบอร์ด (Clipboard History)" ใต้ช่องค้นหา',
+          target: 'spotlight-clipboard',
+          expect: { type: 'spotlight:clipboard' },
+          hint: 'แถว 📋 ใต้ช่องพิมพ์ — ฟีเจอร์ใหม่ใน Tahoe ที่ Windows 11 ก็เพิ่งมี (Win+V)',
+          winTip: 'เทียบเท่า Win+V (Clipboard history) ของ Windows — Mac เข้าถึงผ่าน Spotlight',
+        },
+        {
+          kind: 'info',
+          title: 'คลิปบอร์ดหลายชั้น',
+          body: 'ถ้าคุณเคยกด ⌘C ในบทเรียนก่อนหน้า รายการจะโผล่ที่นี่ — คัดลอกเก็บไว้ได้หลายรายการ คลิกเพื่อใช้ซ้ำ จบการวิ่งไปกลับคัดลอกของเก่า',
+        },
+        {
+          kind: 'action',
+          instruction: 'ปิด Spotlight ด้วยปุ่ม Esc',
+          target: 'spotlight-panel',
+          expect: { type: 'shortcut', keys: 'esc' },
+          hint: 'กด Esc บนคีย์บอร์ด (มุมซ้ายบน)',
+        },
+        {
+          kind: 'quiz',
+          question: 'ฟีเจอร์ไหน "ใหม่" ใน macOS Tahoe โดยเฉพาะ?',
+          options: ['การค้นหาแอปใน Spotlight', 'คลิปบอร์ดประวัติใน Spotlight', 'การปิดโปรแกรม', 'การลบไฟล์'],
+          answer: 1,
+          explain: 'Clipboard history ใน Spotlight เพิ่งมาใน Tahoe (26) — ค้นหาแอปนั้นมีตั้งแต่รุ่นก่อน',
+        },
+      ],
+    },
+    {
+      id: 'm3l5',
+      title: 'คีย์ลัดจำเป็น 6 ตัวที่ต้องขาดไม่ได้',
+      goal: 'ฝึกชุดคีย์ลัดที่โปร Mac ใช้ทุกวัน',
+      minutes: 6,
+      xp: 70,
+      initial: openApps('safari', 'notes'),
+      steps: [
+        {
+          kind: 'info',
+          title: 'ชุดสุดท้ายก่อนขึ้นระดับ',
+          body: '⌘W ปิดหน้าต่าง • ⌘M ย่อไป Dock • ⌘Q ออกจากโปรแกรม • ⌘H ซ่อนแอป • ⌘, เปิดการตั้งค่าแอป • Esc ยกเลิก — ทั้งหมดฝึกได้จากการ์ดด้านขวา (บนเครื่อง Windows จริง บางปุ่มโดนเบราว์เซอร์จับ ให้กดปุ่มในการ์ดแทน)',
+          winTip: '⌘W ≠ ⌘Q! ปิดหน้าต่างกับออกจากโปรแกรมคนละเรื่องบน Mac — นี่คือบทเรียนที่คนย้ายค่ายพลาดบ่อยสุด',
+        },
+        {
+          kind: 'shortcut',
+          instruction: '⌘W — ปิดหน้าต่างที่โฟกัสอยู่',
+          keys: 'cmd+w',
+          hint: 'หน้าต่างโน้ตจะถูกปิด แต่แอปยังรัน (จุดใต้ไอคอนยังอยู่)',
+        },
+        {
+          kind: 'shortcut',
+          instruction: '⌘M — ย่อหน้าต่าง Safari ไปไว้ที่ Dock',
+          keys: 'cmd+m',
+          hint: 'ให้คลิกหน้าต่าง Safari ก่อน แล้วกด ⌘M',
+        },
+        {
+          kind: 'shortcut',
+          instruction: '⌘, — เปิดการตั้งค่าระบบ (System Settings)',
+          keys: 'cmd+,',
+          hint: 'ปุ่ม comma ( , ) — คีย์ลัดลับของแอปทุกตัวบน Mac คือ "การตั้งค่า" อยู่ที่ ⌘, เสมอ',
+        },
+        {
+          kind: 'shortcut',
+          instruction: '⌘Q — ออกจากโปรแกรมที่โฟกัสอย่างสมบูรณ์',
+          keys: 'cmd+q',
+          hint: 'จุดใต้ไอคอนแอปจะหายไป — นี่คือการปิดจริง ต่างจาก ⌘W',
+        },
+        {
+          kind: 'freeplay',
+          instruction: 'ทดสอบรวม: ทำครบ 3 ข้อเพื่อรับตรา Spotlight Master',
+          tasks: [
+            { label: 'เปิด Spotlight ด้วย ⌘Space', expect: { type: 'shortcut', keys: 'cmd+space' } },
+            { label: 'สลับแอปด้วย ⌘Tab', expect: { type: 'shortcut', keys: 'cmd+tab' } },
+            { label: 'กด Esc ปิดหน้าจอ overlay', expect: { type: 'shortcut', keys: 'esc' } },
+          ],
+        },
+      ],
+    },
+  ],
+};

@@ -1,0 +1,19 @@
+{
+  "name": "macpath-26",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "MacPath 26 — เว็บสอนใช้ macOS 26 (Tahoe) แบบ step-by-step พร้อม simulator สำหรับผู้ย้ายจาก Windows",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vite": "^6.0.0",
+    "vitest": "^2.1.8"
+  }
+}
